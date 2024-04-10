@@ -5,6 +5,7 @@ namespace Laravel\Cashier\Concerns;
 use Laravel\Cashier\Cashier;
 use Laravel\Cashier\Subscription;
 use Laravel\Cashier\SubscriptionBuilder;
+use Carbon\Carbon;
 
 trait ManagesSubscriptions
 {
@@ -47,10 +48,16 @@ trait ManagesSubscriptions
      *
      * @return bool
      */
-    public function onGenericTrial()
-    {
-        return $this->trial_ends_at && $this->trial_ends_at->isFuture();
-    }
+     public function onGenericTrial()
+     {
+         if (!$this->trial_ends_at) {
+             return false;
+         }
+
+         $trialEndsAt = Carbon::parse($this->trial_ends_at);
+
+         return $trialEndsAt->isFuture();
+     }
 
     /**
      * Get the ending date of the trial.

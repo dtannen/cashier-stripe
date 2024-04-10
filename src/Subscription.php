@@ -325,10 +325,16 @@ class Subscription extends Model
      *
      * @return bool
      */
-    public function onTrial()
-    {
-        return $this->trial_ends_at && $this->trial_ends_at->isFuture();
-    }
+     public function onTrial()
+     {
+         if (!$this->trial_ends_at) {
+             return false;
+         }
+
+         $trialEndsAt = Carbon::parse($this->trial_ends_at);
+
+         return $trialEndsAt->isFuture();
+     }
 
     /**
      * Filter query by on trial.
@@ -357,10 +363,16 @@ class Subscription extends Model
      *
      * @return bool
      */
-    public function onGracePeriod()
-    {
-        return $this->ends_at && $this->ends_at->isFuture();
-    }
+     public function onGracePeriod()
+     {
+         if (!$this->ends_at) {
+             return false;
+         }
+
+         $endsAt = Carbon::parse($this->ends_at);
+
+         return $endsAt->isFuture();
+     }
 
     /**
      * Filter query by on grace period.
